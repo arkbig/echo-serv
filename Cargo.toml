@@ -1,0 +1,19 @@
+[package]
+name = "echo-serv"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.70.0"
+authors = ["arkbig"]
+description = "Accept HTTP requests and return the request information."
+readme = "README.md"
+repository = "https://github.com/arkbig/echo-serv"
+license = "Zlib"
+keywords = ["http", "echo"]
+categories = ["web"]
+
+[dependencies]
+anyhow = "1.0.71"
+hyper = { version = "0.14.27", features = ["http1","http2","server","tcp"] }
+serde = { version = "1.0.167", features = ["derive"] }
+serde_json = "1.0.100"
+tokio = { version = "1.29.1", features = ["full"] }

@@ -1,0 +1,22 @@
+services:
+  app:
+    image: arkbig/echo-serv
+    init: true
+    build:
+      context: ../../
+      dockerfile: deploy/docker/Dockerfile
+      args:
+        no_proxy: ${no_proxy-}
+        http_proxy: ${http_proxy-}
+        https_proxy: ${https_proxy-}
+    restart: unless-stopped
+    environment:
+      CONTAINER_UID: ${CONTAINER_UID-}
+      CONTAINER_GID: ${CONTAINER_GID-}
+      RUST_BACKTRACE: ${RUST_BACKTRACE-}
+      PORT: ${PORT:-7878}
+    ports:
+      - 127.0.0.1::${PORT:-7878}
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.app-${COMPOSE_PROJECT_NAME:-echo-serv}.entrypoints=https
