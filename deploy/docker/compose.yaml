@@ -1,7 +1,6 @@
 services:
   app:
     image: arkbig/echo-serv
-    init: true
     build:
       context: ../../
       dockerfile: deploy/docker/Dockerfile

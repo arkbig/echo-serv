@@ -27,3 +27,7 @@ This `echo-serv` command accepts HTTP requests and returns the request informati
 2. `curl http://localhost:7878/echo`
    - The response is a json of request information.
 3. Access <http://localhost:7878> using browser to display the request history.
+
+## Demo
+
+![demo](doc/demo.png)

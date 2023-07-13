@@ -3,6 +3,7 @@ use hyper::service::{make_service_fn, service_fn};
 use hyper::{body, Body, Request, Response, Server, Uri};
 use serde::Serialize;
 use serde_json::{json, to_string_pretty, Value};
+use signal_hook::low_level::exit;
 use std::convert::Infallible;
 use std::net::SocketAddr;
 use std::sync::Arc;
@@ -111,6 +112,18 @@ async fn handle_request(
 
 #[tokio::main]
 async fn main() {
+    {
+        use signal_hook::consts::{SIGHUP, SIGINT, SIGQUIT, SIGTERM};
+        let mut signals = signal_hook::iterator::Signals::new(&[SIGHUP, SIGINT, SIGQUIT, SIGTERM])
+            .expect("Error setting signal handler");
+        std::thread::spawn(move || {
+            for sig in signals.forever() {
+                println!("Received signal {:?}", sig);
+                exit(1);
+            }
+        });
+    }
+
     let app_state = Arc::new(Mutex::new(AppState {
         requests: Vec::with_capacity(MAX_HISTORY),
     }));
