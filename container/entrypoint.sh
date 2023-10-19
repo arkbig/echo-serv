@@ -10,16 +10,31 @@ export IFS LC_ALL=C LANG=C PATH
 #--------------------------------------------------------------------
 
 # Adjust UID,GID
-uid=$(stat -c "%u" .)
-gid=$(stat -c "%g" .)
 ug_name=echo_serv
+uid=$(id -u)
+gid=$(id -g)
 if [ "${CONTAINER_GID}" != "${gid}" ]; then
     groupmod -g "${CONTAINER_GID}" -o "${ug_name}"
-    chgrp -R "${CONTAINER_GID}" .
 fi
 if [ "${CONTAINER_UID}" != "${uid}" ]; then
     usermod -g "${ug_name}" -o -u "${CONTAINER_UID}" "${ug_name}"
-    chown -R "${CONTAINER_UID}" .
+fi
+
+# Adjust UID,GID of the container creation directory.
+for mk_dir in /home/${ug_name} /app; do
+    uid=$(stat -c "%u" "${mk_dir}")
+    gid=$(stat -c "%g" "${mk_dir}")
+    if [ "${CONTAINER_GID}" != "${gid}" ]; then
+        chgrp -R "${CONTAINER_GID}" "${mk_dir}"
+    fi
+    if [ "${CONTAINER_UID}" != "${uid}" ]; then
+        chown -R "${CONTAINER_UID}" "${mk_dir}"
+    fi
+done
+
+# If exe is not specified, run echo-serv
+if [ -z "$1" ] || [ "${1#-}" != "$1" ]; then
+    set -- echo-serv "$@"
 fi
 
 # Run as

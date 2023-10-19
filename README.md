@@ -30,7 +30,7 @@ This `echo-serv` command accepts HTTP requests and returns the request informati
 
 ## Demo
 
-![demo](doc/demo.png)
+![demo](docs/demo.png)
 
 <details>
 <summary>CLI example</summary>
